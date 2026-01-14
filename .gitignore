@@ -38,6 +38,7 @@ wheels/
 # Output files
 output/
 results/
+example_output/
 *.csv
 
 # IDE
