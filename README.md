@@ -1,2 +1,194 @@
 # PlurigaussianSimulation
-Using PGM to model multiphase pore-scale structure and quantitative construct the model parameters and pore-scale structure characteristics relationship
+
+Using PGM to model multiphase pore-scale structure and quantitative construct the model parameters and pore-scale structure characteristics relationship.
+
+## Overview
+
+This repository provides tools for quantitative analysis of 3D tomography images of porous materials (open cell foam). The analysis includes:
+
+- **Porosity calculation**: Volume fraction of pore phase
+- **Autocorrelation of pore phase**: Spatial correlation of pores
+- **Autocorrelation of solid phase**: Spatial correlation of solid material
+- **Cross-correlation**: Spatial relationship between pore and solid phases
+
+These statistical measures are essential inputs for plurigaussian simulation of porous materials.
+
+## Features
+
+- Process 197 (or more) 3D CT images (200x200x200 voxels each)
+- Calculate porosity for each sample
+- Compute 3D autocorrelation functions for both phases
+- Compute cross-correlation between phases
+- Extract radial profiles from 3D correlation functions
+- Export results to CSV format for further analysis
+
+## Installation
+
+### Requirements
+
+- Python 3.7 or higher
+- NumPy
+- SciPy
+- Pandas
+- scikit-image
+- tifffile
+
+### Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/phuthiennguyen-hub/PlurigaussianSimulation.git
+cd PlurigaussianSimulation
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+### Processing 3D CT Images
+
+The main script `process_samples.py` processes all 3D CT images in a directory and generates a CSV file with analysis results.
+
+#### Basic Usage
+
+```bash
+python process_samples.py --input_dir /path/to/ct/images --output_csv results.csv
+```
+
+#### Arguments
+
+- `--input_dir` (required): Directory containing 3D CT image files
+- `--output_csv` (optional): Output CSV file path (default: `analysis_results.csv`)
+- `--max_corr_distance` (optional): Maximum distance for correlation analysis (default: 50 voxels)
+- `--file_pattern` (optional): File pattern to match samples (default: `*.tif`)
+
+#### Example
+
+```bash
+python process_samples.py \
+    --input_dir ./data/foam_samples \
+    --output_csv foam_analysis_results.csv \
+    --max_corr_distance 50 \
+    --file_pattern "*.tif"
+```
+
+### Supported File Formats
+
+The tool supports the following 3D image formats:
+- TIFF stacks (`.tif`, `.tiff`)
+- NumPy arrays (`.npy`)
+- Compressed NumPy arrays (`.npz`)
+
+### Input Data Format
+
+Each sample should be:
+- A 3D binary image (200×200×200 voxels recommended)
+- Binary values: 0 for solid phase, 1 for pore phase (or vice versa)
+- Any standard image format (TIFF, NumPy array, etc.)
+
+### Output Format
+
+The output CSV file contains the following columns:
+- `sample_id`: Unique identifier for each sample
+- `sample_name`: Original filename (without extension)
+- `porosity`: Calculated porosity (0-1)
+- `pore_autocorr_dist_0` to `pore_autocorr_dist_N`: Pore autocorrelation at distances 0 to N
+- `solid_autocorr_dist_0` to `solid_autocorr_dist_N`: Solid autocorrelation at distances 0 to N
+- `crosscorr_dist_0` to `crosscorr_dist_N`: Cross-correlation at distances 0 to N
+
+where N = `max_corr_distance - 1`.
+
+## Module Documentation
+
+### `tomography_analysis.py`
+
+Core analysis functions:
+
+- `calculate_porosity(image_3d, pore_value=1)`: Calculate porosity
+- `calculate_autocorrelation(image_3d, phase_value=1, normalize=True)`: 3D autocorrelation
+- `calculate_crosscorrelation(image_3d, phase1_value=1, phase2_value=0, normalize=True)`: 3D cross-correlation
+- `extract_radial_profile(correlation_3d, max_distance=None)`: Extract 1D radial profile
+- `analyze_sample(image_3d, pore_value=1, solid_value=0, max_corr_distance=50)`: Complete sample analysis
+
+### Using the Analysis Module Programmatically
+
+```python
+import numpy as np
+from tomography_analysis import analyze_sample
+
+# Load your 3D image (200x200x200)
+image_3d = np.load('sample.npy')
+
+# Analyze the sample
+results = analyze_sample(image_3d, max_corr_distance=50)
+
+print(f"Porosity: {results['porosity']:.4f}")
+print(f"Pore autocorrelation profile shape: {results['pore_autocorrelation'].shape}")
+print(f"Solid autocorrelation profile shape: {results['solid_autocorrelation'].shape}")
+print(f"Cross-correlation profile shape: {results['crosscorrelation'].shape}")
+```
+
+## Theory
+
+### Porosity
+Porosity (φ) is the ratio of void (pore) volume to total volume:
+```
+φ = V_pore / V_total
+```
+
+### Autocorrelation
+The autocorrelation function describes how a phase correlates with itself at different spatial separations. It provides information about the characteristic size and connectivity of phases.
+
+### Cross-correlation
+The cross-correlation between pore and solid phases provides information about the interface characteristics and spatial arrangement between phases.
+
+### Radial Profile
+The 3D correlation functions are averaged radially to produce 1D profiles, which are more compact and easier to analyze while retaining the essential spatial information.
+
+## Applications
+
+The quantitative descriptors generated by this tool are used for:
+
+1. **Plurigaussian Simulation**: Statistical reconstruction of porous materials
+2. **Microstructure Characterization**: Understanding spatial organization
+3. **Property-Structure Relationships**: Correlating structure with material properties
+4. **Digital Rock Physics**: Predicting transport properties
+
+## Directory Structure
+
+```
+PlurigaussianSimulation/
+├── README.md                  # This file
+├── requirements.txt           # Python dependencies
+├── tomography_analysis.py     # Core analysis functions
+├── process_samples.py         # Main processing script
+├── .gitignore                 # Git ignore patterns
+└── LICENSE                    # License file
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+See LICENSE file for details.
+
+## Citation
+
+If you use this code in your research, please cite:
+```
+@software{plurigaussian_simulation,
+  author = {Phuthien Nguyen},
+  title = {PlurigaussianSimulation: Quantitative Analysis of 3D Tomography Images},
+  year = {2026},
+  url = {https://github.com/phuthiennguyen-hub/PlurigaussianSimulation}
+}
+```
+
+## Contact
+
+For questions or issues, please open an issue on GitHub.
