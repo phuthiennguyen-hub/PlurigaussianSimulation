@@ -117,6 +117,9 @@ def calculate_crosscorrelation(image_3d: np.ndarray, phase1_value: int = 1,
         norm_factor = np.sqrt(auto1[center] * auto2[center])
         if norm_factor > 0:
             crosscorr = crosscorr / norm_factor
+        else:
+            # If normalization factor is zero, one or both phases are empty
+            crosscorr = np.zeros_like(crosscorr)
     
     return crosscorr
 

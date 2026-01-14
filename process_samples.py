@@ -133,7 +133,11 @@ def process_all_samples(input_dir: str, max_corr_distance: int = 50,
             continue
     
     # Convert to DataFrame
-    df = pd.DataFrame(results)
+    if results:
+        df = pd.DataFrame(results)
+    else:
+        # Return empty DataFrame with proper column structure
+        df = pd.DataFrame(columns=['sample_id', 'sample_name', 'porosity'])
     
     return df
 
