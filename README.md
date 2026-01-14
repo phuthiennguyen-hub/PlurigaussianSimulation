@@ -1,6 +1,6 @@
 # PlurigaussianSimulation
 
-Using PGM to model multiphase pore-scale structure and quantitative construct the model parameters and pore-scale structure characteristics relationship.
+Using PGM to model multiphase pore-scale structure and quantitatively construct the model parameters and pore-scale structure characteristics relationship.
 
 ## Overview
 
@@ -165,6 +165,7 @@ PlurigaussianSimulation/
 ├── requirements.txt           # Python dependencies
 ├── tomography_analysis.py     # Core analysis functions
 ├── process_samples.py         # Main processing script
+├── example.py                 # Example demonstration script
 ├── .gitignore                 # Git ignore patterns
 └── LICENSE                    # License file
 ```

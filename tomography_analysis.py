@@ -66,7 +66,12 @@ def calculate_autocorrelation(image_3d: np.ndarray, phase_value: int = 1,
     if normalize:
         # Normalize by the variance at zero lag
         center = tuple(s // 2 for s in autocorr.shape)
-        autocorr = autocorr / autocorr[center]
+        center_value = autocorr[center]
+        if center_value > 0:
+            autocorr = autocorr / center_value
+        else:
+            # If center value is zero, the phase is empty - return zeros
+            autocorr = np.zeros_like(autocorr)
     
     return autocorr
 

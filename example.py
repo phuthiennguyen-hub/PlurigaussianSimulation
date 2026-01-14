@@ -8,6 +8,7 @@ to demonstrate the analysis workflow.
 import numpy as np
 import os
 from pathlib import Path
+from scipy.ndimage import gaussian_filter
 from tomography_analysis import analyze_sample
 import pandas as pd
 
@@ -37,7 +38,6 @@ def generate_synthetic_sample(size=(200, 200, 200), porosity=0.3, seed=None):
     random_field = np.random.randn(*size)
     
     # Apply Gaussian smoothing to create correlated structure
-    from scipy.ndimage import gaussian_filter
     smoothed = gaussian_filter(random_field, sigma=5.0)
     
     # Threshold to achieve target porosity

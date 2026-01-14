@@ -196,7 +196,12 @@ def main():
     print("=" * 60)
     print(f"Analysis complete! Results saved to {args.output_csv}")
     print(f"Processed {len(results_df)} samples")
-    print(f"Average porosity: {results_df['porosity'].mean():.4f}")
+    
+    if len(results_df) > 0:
+        print(f"Average porosity: {results_df['porosity'].mean():.4f}")
+    else:
+        print("Warning: No samples were successfully processed")
+    
     print("=" * 60)
     
     return 0
