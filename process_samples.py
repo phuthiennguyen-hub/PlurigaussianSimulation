@@ -1,5 +1,5 @@
 """
-Main script to process 197 3D CT images and generate CSV output with analysis results.
+Main script to process N number of 3D CT images and generate CSV output with analysis results.
 
 This script processes all sample images and outputs a CSV file containing:
 - Porosity
